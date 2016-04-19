@@ -8,23 +8,21 @@ import (
 
 func main() {
   // ServerMux
-  http.HandleFunc("/", hello)
+  http.HandleFunc("/health", health)
   http.HandleFunc("/send", send)
   http.ListenAndServe(":8080", nil)
 }
 
-func hello(w http.ResponseWriter, r *http.Request) {
-  w.Write([]byte("<html>"))
-  w.Write([]byte("<body>"))
-  w.Write([]byte("<h1>Hello!</h1>"))
-  w.Write([]byte("</body>"))
-  w.Write([]byte("</html>\r\n"))
+func health(w http.ResponseWriter, r *http.Request) {
+  w.Write([]byte(`{ "Status": "Up"}`))
 }
 
 func send(w http.ResponseWriter, r *http.Request) {
   //decoder := json.NewDecoder(req.Body)
-  send_message(streamToString(r.Body))
-  w.Write([]byte("{\"message\":\"Sent Succesfully!\"}"))
+  bodyString := streamToString(r.Body)
+  send_message(bodyString)
+  response := forward_message(bodyString)
+  w.Write(response)
 }
 
 func streamToString(stream io.Reader) string {
