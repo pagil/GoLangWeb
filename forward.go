@@ -7,7 +7,7 @@ import (
 )
 
 func forward_message(body string) []byte {
-  resp, err := http.Post("http://localhost:8080/health", "application/json", strings.NewReader(body))
+  resp, err := http.Post("http://host:80/api/v1/coreteam/notify", "application/json", strings.NewReader(body))
   failOnError(err, "Failed to submit POST Request")
 
   respBody, err := ioutil.ReadAll(resp.Body)
